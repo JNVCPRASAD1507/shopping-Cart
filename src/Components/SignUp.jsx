@@ -51,7 +51,7 @@ const SignUp = () => {
 
   return (
     <Container maxWidth="xs">
-      <Box sx={{ mt: 5, p: 3, boxShadow: 3, borderRadius: 2 }}>
+      <Box sx={{ mt: 5, p: 3, boxShadow: 3, borderRadius: 2 ,backgroundColor:"white" }}>
         <Typography variant="h5" align="center" gutterBottom>
           Sign Up
         </Typography>

@@ -9,7 +9,7 @@ import Carousel from "./Components/carousel";
 import SignIn from "./Components/SignIn";
 import SignUp from "./Components/SignUp";
 import PrivateRoute from "./Components/PrivateRoute";
-import Marquee from "./Components/marquee";
+import MarqueeBanner from "./Components/marquee";
 
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -116,7 +116,7 @@ const App = () => {
             <Route path="/productPage" element={
               <>
                 <Box sx={{ width: "100%" }}>
-                  <Marquee />
+                  <MarqueeBanner />
                 </Box>
                 <Box sx={{ width: "100%", mb: { xs: 1, sm: 2, md: 2 } }}>
                   <Carousel />
