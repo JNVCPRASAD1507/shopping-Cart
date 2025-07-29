@@ -16,33 +16,21 @@ const SignUp = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      // const response = await fetch("http://localhost:5000/users", { 
-      const response = await fetch("https://shoppingcart-backend-5lrv.onrender.com/users", { 
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("User added successfully:", data);
-        // alert("Signup successful!");
-
-      
+      // Store user in localStorage 'users' array
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      // Prevent duplicate usernames
+      if (users.some(u => u.username === values.username)) {
+        alert("Username already exists. Please choose another.");
+        setSubmitting(false);
+        return;
+      }
+      users.push(values);
+      localStorage.setItem("users", JSON.stringify(users));
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("username", values.username);
-      // Save all signup data to localStorage
+      // Optionally store signupData for last signup
       localStorage.setItem("signupData", JSON.stringify(values));
-
-      
-        navigate("/signin");
-      } else {
-        const errorData = await response.json();
-        console.log("Error response:", errorData);
-        alert("Error signing up. Please try again.");
-      }
+      navigate("/signin");
     } catch (error) {
       console.error("Error during submission:", error);
       alert("Error saving data: " + error.message);

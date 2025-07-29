@@ -19,21 +19,19 @@ const SignIn = ({ setIsAuthenticated }) => {
   });
 
   const handleSubmit = (values, { setSubmitting }) => {
+    // Use only localStorage for authentication
     const users = JSON.parse(localStorage.getItem("users")) || [];
-
     const matchedUser = users.find(
       (u) => u.username === values.username && u.password === values.password
     );
-
     if (matchedUser) {
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("username", values.username);
-      if (setIsAuthenticated) setIsAuthenticated(true); // for context/global state
+      if (setIsAuthenticated) setIsAuthenticated(true);
       navigate("/productPage");
     } else {
       alert("Invalid username or password.");
     }
-
     setSubmitting(false);
   };
 
