@@ -1,18 +1,19 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback, Suspense, lazy } from "react";
 import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { AppBar, Toolbar, IconButton, Badge, Container, Typography, Box, Grid, Button, Collapse, Fade } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
 import Card from "./Components/comp";
 import { data } from "./Products/Cards";
-import ProductSectionedGrid from "./Components/ProductSectionedGrid";
 
-import CartPage from "./Components/cartpage";
-import Carousel from "./Components/carousel";
-import SignIn from "./Components/SignIn";
-import SignUp from "./Components/SignUp";
-import PrivateRoute from "./Components/PrivateRoute";
-import MarqueeBanner from "./Components/marquee";
+
+const CartPage = lazy(() => import("./Components/cartpage"));
+const Carousel = lazy(() => import("./Components/carousel"));
+const SignIn = lazy(() => import("./Components/SignIn"));
+const SignUp = lazy(() => import("./Components/SignUp"));
+const PrivateRoute = lazy(() => import("./Components/PrivateRoute"));
+const MarqueeBanner = lazy(() => import("./Components/marquee"));
+const ProductSectionedGrid = lazy(() => import("./Components/ProductSectionedGrid"));
 
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -446,6 +447,7 @@ return (
       )}
 
       <Container maxWidth={false} disableGutters sx={{ mt: hideAppBar ? 0 : { xs: 7, sm: 8 }, px: { xs: 0.5, sm: 2 }, width: '100%', maxWidth: '100%', minHeight: '100vh', overflowX: 'hidden' }}>
+       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           {/* Redirect to signup if not authenticated */}
           <Route path="/" element={!isAuthenticated && !hasSignedUp ? <SignUp onSignUpSuccess={handleSignUpSuccess} /> : <Navigate to="/productPage" />} />
@@ -557,6 +559,7 @@ return (
           </Route>
 
         </Routes>
+        </Suspense>
 
       </Container>
     </Box>

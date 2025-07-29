@@ -33,6 +33,8 @@ const SignUp = () => {
       
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("username", values.username);
+      // Save all signup data to localStorage
+      localStorage.setItem("signupData", JSON.stringify(values));
 
       
         navigate("/signin");
