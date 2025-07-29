@@ -1,29 +1,23 @@
-App Container
-.app {
-  display: flex; 
-  flex: auto;
-  flex-wrap: wrap; 
-  gap: 20px; 
-  justify-content: center;
-  padding: 10px; 
-}
 
-/* Card Styles */
 .card {
   border: 1px solid #ddd;
   border-radius: 8px;
-  margin: 10px;
+  margin: 10px auto;
   overflow: hidden;
-  max-width: 200px;
+  max-width: 220px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  flex: 1 1 300px; /* Makes cards responsive with a minimum width */
+  background-color: #fff;
+  text-align: center;
+  width: 100%;
 }
 
-/* Card Image */
+
 .card-image img {
   width: 100%;
-  height: auto;
-  transform: scale(0.9);
+  height: 150px;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s, filter 0.3s;
 }
 
 /* Card Content */
@@ -80,28 +74,39 @@ App Container
 }
 
 /* Hover Effect - Reduce Image Size */
+
 .card-image img:hover {
-  transform: scale(1); /* Slightly reduce the size */
-  filter: brightness(1); /* Increase brightness slightly */
+  filter: brightness(1.05);
 }
-/* Card Content */
+
+
 
 .quantity-btn {
-font-size: 18px;
-padding: 5px 10px;
-background-color: #ddd;
-border: 1px solid #ccc;
-border-radius: 5px;
-cursor: pointer;
+  font-size: 18px;
+  padding: 5px 10px;
+  background-color: #ddd;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.quantity-btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
 }
 
 .quantity-btn:hover {
-background-color: #bbb;
+  background-color: #bbb;
 }
 
+
 .quantity-value {
-font-size: 18px;
-margin: 0 10px;
+  font-size: 18px;
+  margin: 0 10px;
 }
 /* Cart Button Container */
 .cart-container {
@@ -112,24 +117,31 @@ z-index: 1000;
 }
 
 /* Cart Button */
+
+
 .cart-button {
-display: flex;
-align-items: center;
-justify-content: center;
-position: relative;
-background-color: #f8f9fa;
-border: 2px solid #ccc;
-border-radius: 50%;
-width: 60px;
-height: 60px;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-cursor: pointer;
-transition: transform 0.3s ease, background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: #f8f9fa;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s, background-color 0.3s;
+ }
+
+.cart-button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
 }
 
 .cart-button:hover {
-transform: scale(1.1);
-background-color: #ddd;
+  transform: scale(1.1);
+  background-color: #ddd;
 }
 
 /* Cart Icon */
@@ -586,4 +598,38 @@ display: flex;
   width: 280px;
   height: 380px;
 }
+}
+
+
+
+@media only screen and (max-width: 600px) {
+  .card {
+    max-width: 98vw;
+    width: 98vw;
+    margin: 10px auto;
+  }
+  .cart-button {
+    width: 100%;
+    margin-top: 8px;
+  }
+  .cart-items {
+    padding: 10px;
+    font-size: 14px;
+  }
+  .card-media {
+    height: 140px;
+  }
+  .section {
+    flex-direction: column;
+    text-align: center;
+  }
+  .section img {
+    width: 100%;
+    height: auto;
+  }
+  .toolbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
 }

@@ -1,27 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box
+} from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 const SignIn = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch users on mount
-  useEffect(() => {
-    fetch("https://shoppingcart-backend-5lrv.onrender.com/users")
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error loading users:", error);
-        setLoading(false);
-      });
-  }, []);
 
   const validationSchema = Yup.object({
     username: Yup.string().required("Username is required"),
@@ -29,15 +19,17 @@ const SignIn = ({ setIsAuthenticated }) => {
   });
 
   const handleSubmit = (values, { setSubmitting }) => {
-    const user = users.find(
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const matchedUser = users.find(
       (u) => u.username === values.username && u.password === values.password
     );
 
-    if (user) {
+    if (matchedUser) {
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("username", values.username);
-      setIsAuthenticated(true); // update App state
-      navigate("/productPage"); // redirect
+      if (setIsAuthenticated) setIsAuthenticated(true); // for context/global state
+      navigate("/productPage");
     } else {
       alert("Invalid username or password.");
     }
@@ -45,14 +37,23 @@ const SignIn = ({ setIsAuthenticated }) => {
     setSubmitting(false);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <Container maxWidth="xs"  >
-      <Box sx={{ mt: 5, p: 3, boxShadow: 13, borderRadius: 2 ,backgroundColor:"white"}}>
-        <Typography variant="h5" align="center" gutterBottom>
+    <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: 400,
+          mt: 0,
+          p: 3,
+          boxShadow: 13,
+          borderRadius: 2,
+          backgroundColor: 'white',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant="h5" align="center" gutterBottom sx={{ width: '100%' }}>
           Sign In
         </Typography>
         <Formik
@@ -61,7 +62,7 @@ const SignIn = ({ setIsAuthenticated }) => {
           onSubmit={handleSubmit}
         >
           {({ errors, touched, handleChange, handleBlur, isSubmitting }) => (
-            <Form>
+            <Form style={{ width: '100%' }}>
               <Field
                 as={TextField}
                 name="username"
@@ -102,10 +103,19 @@ const SignIn = ({ setIsAuthenticated }) => {
             </Form>
           )}
         </Formik>
-        <Typography align="center" sx={{ mt: 2 }}>
-          Don't have an account?{" "}
-          <Button onClick={() => navigate("/")}>Sign Up</Button>
-        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', mt: 2 }}>
+          <Typography align="center" sx={{ mb: 1 }}>
+            Don't have an account?
+          </Typography>
+          <Button
+            variant="text"
+            fullWidth
+            onClick={() => navigate("/")}
+            sx={{ maxWidth: 200 }}
+          >
+            Sign Up
+          </Button>
+        </Box>
       </Box>
     </Container>
   );

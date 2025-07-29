@@ -1,14 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Data } from "../Products/Cards";
-import { Box, IconButton } from "@mui/material";
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Box, IconButton, Typography } from "@mui/material";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 const Carousel = () => {
   const [slides, setSlides] = useState([]);
   const [current, setCurrent] = useState(0);
   const autoplay = true;
   const startX = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 600);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const storedSlides = localStorage.getItem("slides");
@@ -20,7 +29,6 @@ const Carousel = () => {
     }
   }, []);
 
-  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "ArrowLeft") goToPrev();
@@ -28,9 +36,8 @@ const Carousel = () => {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  });
+  }, []);
 
-  // Autoplay
   useEffect(() => {
     if (!autoplay || slides.length === 0) return;
     const timer = setTimeout(() => {
@@ -61,6 +68,11 @@ const Carousel = () => {
 
   if (!slides.length) return null;
 
+  const currentSlide = slides[current];
+  const imageUrl = isMobile
+    ? currentSlide.MblImg || currentSlide.mobileImage
+    : currentSlide.DeskImg || currentSlide.desktopImage;
+
   return (
     <Box
       sx={{
@@ -70,15 +82,26 @@ const Carousel = () => {
         position: "relative",
         borderRadius: 4,
         overflow: "hidden",
-        boxShadow: 3
+        boxShadow: 3,
+        cursor: "pointer"
       }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onClick={(e) => {
+        const box = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - box.left;
+        if (x < box.width * 0.3) {
+          goToPrev();
+        } else if (x > box.width * 0.7) {
+          goToNext();
+        }
+      }}
     >
       {/* Slide Image */}
       <img
-        src={slides[current].DeskImg || slides[current].MblImg || slides[current].mobileImage || slides[current].desktopImage}
-        alt={slides[current].name}
+        src={imageUrl}
+        alt={currentSlide && currentSlide.name ? currentSlide.name : "slide"}
+        loading="lazy"
         style={{
           width: "100%",
           height: "100%",
@@ -87,41 +110,7 @@ const Carousel = () => {
         }}
       />
 
-      {/* Prev Button */}
-      <IconButton
-        onClick={goToPrev}
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: 10,
-          transform: "translateY(-50%)",
-          bgcolor: "white",
-          boxShadow: 2,
-          zIndex: 2
-        }}
-        aria-label="Previous"
-      >
-        <ArrowBackIosNewIcon />
-      </IconButton>
-
-      {/* Next Button */}
-      <IconButton
-        onClick={goToNext}
-        sx={{
-          position: "absolute",
-          top: "50%",
-          right: 10,
-          transform: "translateY(-50%)",
-          bgcolor: "white",
-          boxShadow: 2,
-          zIndex: 2
-        }}
-        aria-label="Next"
-      >
-        <ArrowForwardIosIcon />
-      </IconButton>
-
-      {/* Indicators */}
+      {/* Slide Indicators */}
       <Box
         sx={{
           position: "absolute",
@@ -137,14 +126,18 @@ const Carousel = () => {
           <Box
             key={idx}
             sx={{
-              width: 12,
-              height: 12,
+              width: 10,
+              height: 8,
               borderRadius: "50%",
-              bgcolor: idx === current ? "primary.main" : "grey.400",
+              bgcolor: idx === current ? "black" : "white",
               cursor: "pointer",
-              border: idx === current ? "2px solid white" : "none"
+              border: idx === current ? "2px solid white" : "none",
+              transition: "all 0.3s ease"
             }}
-            onClick={() => setCurrent(idx)}
+            onClick={(event) => {
+              event.stopPropagation();
+              setCurrent(idx);
+            }}
           />
         ))}
       </Box>
